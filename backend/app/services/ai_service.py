@@ -1,3 +1,4 @@
+import os
 import re
 import json
 import logging
@@ -14,6 +15,10 @@ _vectorstore = None
 
 def _load_vectorstore():
     global _vectorstore
+    if not os.path.exists(FAISS_INDEX):
+        print("RAG индекс не найден — работаем без RAG")
+        logger.warning("FAISS index not found at '%s' — RAG disabled.", FAISS_INDEX)
+        return
     try:
         from langchain_community.embeddings import HuggingFaceEmbeddings
         from langchain_community.vectorstores import FAISS
@@ -27,8 +32,6 @@ def _load_vectorstore():
             allow_dangerous_deserialization=True,
         )
         logger.info("FAISS index loaded: %s", FAISS_INDEX)
-    except FileNotFoundError:
-        logger.warning("FAISS index not found at '%s' — RAG disabled.", FAISS_INDEX)
     except ImportError as e:
         logger.warning("RAG dependencies missing (%s) — RAG disabled.", e)
     except Exception as e:
@@ -142,7 +145,10 @@ def chat(messages: list[dict], doctors: list[dict], patient: dict | None = None)
     last_user_msg = next(
         (m["content"] for m in reversed(messages) if m["role"] == "user"), ""
     )
-    rag_ctx = _rag_context(last_user_msg)
+    if _vectorstore is not None:
+        rag_ctx = _rag_context(last_user_msg)
+    else:
+        rag_ctx = "База знаний недоступна."
 
     system = _build_system_prompt(doctors, patient)
 
