@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(New-Item -ItemType Directory -Force -Path \"c:\\\\Users\\\\���\\\\medical-assistant\\\\backend\\\\scripts\")",
+      "PowerShell(New-Item -ItemType Directory -Force -Path \"c:\\\\Users\\\\���\\\\medical-assistant\\\\backend\\\\rag-docs\")"
+    ]
+  }
+}
