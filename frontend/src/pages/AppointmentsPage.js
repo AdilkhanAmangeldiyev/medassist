@@ -199,7 +199,6 @@ function Section({ title, appointments, isDoctor, onUpdate, onMedCard, dimmed })
 }
 
 function AppointmentCard({ a, isDoctor, onUpdate, onMedCard, dimmed }) {
-  const dt = new Date(a.start_time + (a.start_time.includes('T') && !a.start_time.includes('+') ? '' : ''));
   const displayDate = new Date(a.start_time.split('T')[0] + 'T12:00:00')
     .toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
   const displayTime = a.start_time.split('T')[1]?.slice(0, 5) ?? '—';
